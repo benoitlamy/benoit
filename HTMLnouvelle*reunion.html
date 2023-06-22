@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Créer une nouvelle réunion</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Créer une nouvelle réunion</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Fixer les créneaux de date et heure</h2>
+      <form id="meeting-form">
+        <label for="number-of-slots">Nombre de créneaux :</label>
+        <input type="number" id="number-of-slots" name="number-of-slots" required>
+        
+        <div id="date-time-slots">
+          <!-- Champs de date-heure générés dynamiquement -->
+        </div>
+        
+        <input type="submit" value="Valider">
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('number-of-slots').addEventListener('input', function() {
+      var numberOfSlots = parseInt(this.value);
+      var slotsContainer = document.getElementById('date-time-slots');
+      slotsContainer.innerHTML = '';
+      
+      for (var i = 0; i < numberOfSlots; i++) {
+        var slotLabel = document.createElement('label');
+        slotLabel.innerHTML = 'Créneau ' + (i + 1) + ' :';
+        
+        var slotInput = document.createElement('input');
+        slotInput.type = 'datetime-local';
+        slotInput.required = true;
+        
+        slotsContainer.appendChild(slotLabel);
+        slotsContainer.appendChild(slotInput);
+      }
+    });
+    
+    document.getElementById('meeting-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      var nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.placeholder = 'Votre nom';
+      nameInput.required = true;
+      
+      var timeSlotsTable = document.createElement('table');
+      var slotsContainer = document.getElementById('date-time-slots');
+      var slotInputs = slotsContainer.getElementsByTagName('input');
+      
+      for (var i = 0; i < slotInputs.length; i++) {
+        var slotDateTime = slotInputs[i].value;
+        
+        var row = timeSlotsTable.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        
+        cell1.innerHTML = slotDateTime;
+        cell2.innerHTML = '<button onclick="selectSlot(this)">Oui</button>/<button onclick="selectSlot(this)">Non</button>';
+      }
+      
+      var submitButton = document.createElement('input');
+      submitButton.type = 'submit';
+      submitButton.value = 'Valider';
+      
+      this.innerHTML = '';
+      this.appendChild(nameInput);
+      this.appendChild(timeSlotsTable);
+      this.appendChild(submitButton);
+    });
+    
+    function selectSlot(button) {
+      var row = button.parentNode.parentNode;
+      
+      if (button.innerHTML === 'Oui') {
+        row.className = 'selected';
+      } else {
+        row.className = '';
+      }
+    }
+  </script>
+</body>
+</html>
